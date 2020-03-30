@@ -14,7 +14,7 @@ namespace language_ext.kata.tests
         {
             // Divide x = 9 by y = 2
             Try<int> tryResult = Divide(9, 2);
-            int result = tryResult.Match(x => x, 0);
+            int result = 0;
 
             Assert.Equal(4, result);
             Assert.True(tryResult.IsSucc());
@@ -27,9 +27,7 @@ namespace language_ext.kata.tests
         {
             // Divide x = 9 by y = 2 and add z to the result
             int z = 3;
-            int result = Divide(9, 2)
-                            .Map(a => a + z)
-                            .Match(x => x, 0);
+            int result = 0;
 
             Assert.Equal(7, result);
         }
@@ -40,7 +38,7 @@ namespace language_ext.kata.tests
         {
             // Divide x by 0 and get the result
             int x = 1;
-            Assert.Throws<DivideByZeroException>(() => Divide(x, 0).Match(x => x, ex => throw ex));
+            Assert.Throws<DivideByZeroException>(() => { });
         }
 
         [Fact]
@@ -48,7 +46,7 @@ namespace language_ext.kata.tests
         {
             // Divide x by 0, on exception returns 0
             int x = 1;
-            int result = Divide(x, 0).IfFail(0);
+            int result = -1;
 
             Assert.Equal(0, result);
         }
@@ -59,12 +57,7 @@ namespace language_ext.kata.tests
             // Divide x by 0, log the failure message to the console and get 0
             int x = 1;
 
-            int result = Divide(x, 0)
-                    .IfFail(failure =>
-                    {
-                        Console.WriteLine(failure.Message);
-                        return 0;
-                    });
+            int result = -1;
 
             Assert.Equal(0, result);
         }
@@ -79,17 +72,7 @@ namespace language_ext.kata.tests
             int x = 8;
             int y = 4;
 
-            var result = Divide(x, y)
-                    .Match(success =>
-                    {
-                        Console.WriteLine(SUCCESS_MESSAGE + success);
-                        return success;
-                    },
-                    failure =>
-                    {
-                        Console.WriteLine(failure.Message);
-                        return 0;
-                    });
+            var result = -1;
 
             Assert.Equal(2, result);
         }
@@ -105,19 +88,7 @@ namespace language_ext.kata.tests
             int x = 27;
             int y = 3;
 
-            int result = Divide(x, y)
-                    .Bind(previous => Divide(previous, y))
-                    .Bind(previous =>Divide(previous, y))
-                    .Match(success =>
-                    {
-                        Console.WriteLine(SUCCESS_MESSAGE + success);
-                        return success;
-                    },
-                    failure =>
-                    {
-                        Console.WriteLine(failure.Message);
-                        return 0;
-                    });
+            int result = -1;
 
             Assert.Equal(1, result);
         }

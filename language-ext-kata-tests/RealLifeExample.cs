@@ -20,15 +20,15 @@ namespace language_ext.kata.tests
         [Fact]
         public void Register_BudSpencer_should_return_a_new_tweet_url()
         {
-            var tweetUrl = accountService.Register(BUD_SPENCER).IfNone("Registration failed");
+            var tweetUrl = accountService.Register(BUD_SPENCER);
             Assert.Equal("TweetUrl", tweetUrl);
         }
 
         [Fact]
         public void Register_an_unknown_user_should_return_an_error_message()
         {
-            var tweetUrl = accountService.Register(UNKNOWN_USER).IfNone("Registration failed");
-            Assert.Equal("Registration failed", tweetUrl);
+            var tweetUrl = accountService.Register(UNKNOWN_USER);
+            Assert.Null(tweetUrl);
         }
     }
 }

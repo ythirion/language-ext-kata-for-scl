@@ -1,6 +1,4 @@
 ﻿using System;
-using LanguageExt;
-using static LanguageExt.Prelude;
 
 namespace language_ext.kata.Account
 {
@@ -17,39 +15,40 @@ namespace language_ext.kata.Account
             this.businessLogger = businessLogger;
         }
 
-        private Try<RegistrationContext> CreateContext(Guid userId) =>
-            Try(() => userService.FindById(userId)).Map(user => new RegistrationContext(user));
-
-        private Try<RegistrationContext> RegisterOnTwitter(RegistrationContext context) =>
-            Try(() => twitterService.Register(context.Email, context.Name)).Map(context.SetAccount);
-
-        private Try<RegistrationContext> AuthenticateOnTwitter(RegistrationContext context) =>
-            Try(() => twitterService.Authenticate(context.Email, context.Password)).Map(context.SetToken);
-
-        private Try<RegistrationContext> Tweet(RegistrationContext context) =>
-            Try(() => twitterService.Tweet(context.Token, "Hello I am " + context.Name)).Map(context.SetTweetUrl);
-
-        private Try<RegistrationContext> UpdateUser(RegistrationContext context) =>
-            Try(() =>
-            {
-                userService.UpdateTwitterAccountId(context.Id, context.AccountId);
-                return context;
-            });
-
-        public Option<string> Register(Guid id)
+        public string Register(Guid id)
         {
-            string result = null;
+            try
+            {
+                User user = userService.FindById(id);
 
-            CreateContext(id)
-                    .Bind(RegisterOnTwitter)
-                    .Bind(AuthenticateOnTwitter)
-                    .Bind(Tweet)
-                    .Bind(UpdateUser)
-                    .Do((context) => result = context.Url)
-                    .Match(context => businessLogger.LogSuccessRegister(context.Id),
-                        failure => businessLogger.LogFailureRegister(id, failure));
+                if (user == null)
+                    return null;
 
-            return result;
+                string accountId = twitterService.Register(user.Email, user.Name);
+
+                if (accountId == null)
+                    return null;
+
+                string twitterToken = twitterService.Authenticate(user.Email, user.Password);
+
+                if (twitterToken == null)
+                    return null;
+
+                string tweetUrl = twitterService.Tweet(twitterToken, "Hello I am " + user.Name);
+
+                if (tweetUrl == null)
+                    return null;
+
+                userService.UpdateTwitterAccountId(id, accountId);
+                businessLogger.LogSuccessRegister(id);
+
+                return tweetUrl;
+            }
+            catch (Exception ex)
+            {
+                businessLogger.LogFailureRegister(id, ex);
+                return null;
+            }
         }
     }
 

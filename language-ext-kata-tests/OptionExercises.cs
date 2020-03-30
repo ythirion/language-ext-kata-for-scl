@@ -20,9 +20,7 @@ namespace language_ext.kata.tests
                     None);
 
 
-            Seq<Person> definedPersons =
-                persons.Filter(people => people.IsSome)
-                       .Map(person => person.IfNone(() => throw new InvalidOperationException("WTF ?")));
+            Seq<Person> definedPersons = Seq<Person>();
 
             Assert.Equal(2, definedPersons.Count);
         }
@@ -34,9 +32,7 @@ namespace language_ext.kata.tests
             // map it to an Upper case function
             // then it must return the string "Ich bin empty" if empty
             var iamAnOption = Option<string>.None;
-            string optionValue = iamAnOption
-                    .Map(p => p.ToUpper())
-                    .IfNone("Ich bin empty");
+            string optionValue = null;
 
             Assert.True(iamAnOption.IsNone);
             Assert.Equal("Ich bin empty", optionValue);
@@ -46,10 +42,7 @@ namespace language_ext.kata.tests
         public void FindKaradoc()
         {
             // Find Karadoc in the people List or returns Perceval
-            var foundPersonLastName =
-                people.Find(person => person.Named("Karadoc"))
-                    .Map(person => person.LastName)
-                    .IfNone("Perceval");
+            var foundPersonLastName = "found";
 
             Assert.Equal("Perceval", foundPersonLastName);
         }
@@ -61,9 +54,7 @@ namespace language_ext.kata.tests
             var firstName = "Rick";
             var lastName = "Sanchez";
 
-            Assert.Throws<ArgumentException>(() =>
-                    people.Find(person => person.LastName == lastName && person.FirstName == firstName)
-                          .IfNone(() => throw new ArgumentException("No matching person")));
+            Assert.Throws<ArgumentException>(() => { });
         }
 
         [Fact]
@@ -74,15 +65,7 @@ namespace language_ext.kata.tests
             double start = 500d;
             StringBuilder resultBuilder = new StringBuilder();
 
-            Option<double> result =
-                Half(start)
-                    .Do(r => resultBuilder.Append(r))
-                    .Bind(Half)
-                    .Do(r => resultBuilder.Append(r))
-                    .Bind(Half)
-                    .Do(r => resultBuilder.Append(r))
-                    .Bind(Half)
-                    .Do(r => resultBuilder.Append(r));
+            Option<double> result = Option<double>.Some(0);
 
             Assert.Equal(result, None);
             Assert.Equal("250125", resultBuilder.ToString());
