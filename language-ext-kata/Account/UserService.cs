@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using LanguageExt;
 using static LanguageExt.Prelude;
 
@@ -23,11 +24,9 @@ namespace language_ext.kata.Account
                     Password = "àu__udsv09Ll",
                 });
 
-        public User FindById(Guid id) => repository.Filter(p => id.Equals(p.Id)).Single();
+        public async Task<User> FindById(Guid id) =>
+            await Task.FromResult(repository.Filter(p => id.Equals(p.Id)).Single());
 
-        public void UpdateTwitterAccountId(Guid id, string twitterAccountId)
-        {
-
-        }
+        public async Task UpdateTwitterAccountId(Guid id, string twitterAccountId) => await Task.CompletedTask;
     }
 }
