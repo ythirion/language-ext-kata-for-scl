@@ -9,6 +9,8 @@ namespace language_ext.kata.tests
 {
     public class OptionExercises : PetDomainKata
     {
+        private static Option<double> Half(double x) => x % 2 == 0 ? Some(x / 2) : None;
+
         [Fact]
         public void FilterAListOfPerson()
         {
@@ -86,11 +88,6 @@ namespace language_ext.kata.tests
 
             Assert.Equal(result, None);
             Assert.Equal("250125", resultBuilder.ToString());
-        }
-
-        private Option<double> Half(double x)
-        {
-            return x % 2 == 0 ? Some(x / 2) : None;
         }
     }
 }

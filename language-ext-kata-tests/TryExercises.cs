@@ -8,6 +8,7 @@ namespace language_ext.kata.tests
     public class TryExercises : PetDomainKata
     {
         private const string SUCCESS_MESSAGE = "I m a fucking genius the result is ";
+        private static Try<int> Divide(int x, int y) => Try(() => x / y);
 
         [Fact]
         public void GetTheResultOfDivide()
@@ -95,6 +96,27 @@ namespace language_ext.kata.tests
         }
 
         [Fact]
+        public void MapTheSuccessWithoutMatch()
+        {
+            // Divide x by y
+            // log the failure message to the console
+            // Log your success to the console
+            // Get the result or 0 if exception
+            int x = 8;
+            int y = 4;
+
+            var result = Divide(x, y)
+                    .Do(r => Console.WriteLine(SUCCESS_MESSAGE + r))
+                    .IfFail(failure =>
+                    {
+                        Console.WriteLine(failure.Message);
+                        return 0;
+                    });
+
+            Assert.Equal(2, result);
+        }
+
+        [Fact]
         public void ChainTheTry()
         {
             // Divide x by y
@@ -108,23 +130,14 @@ namespace language_ext.kata.tests
             int result = Divide(x, y)
                     .Bind(previous => Divide(previous, y))
                     .Bind(previous =>Divide(previous, y))
-                    .Match(success =>
-                    {
-                        Console.WriteLine(SUCCESS_MESSAGE + success);
-                        return success;
-                    },
-                    failure =>
+                    .Do(success => Console.WriteLine(SUCCESS_MESSAGE + success))
+                    .IfFail(failure =>
                     {
                         Console.WriteLine(failure.Message);
                         return 0;
                     });
 
             Assert.Equal(1, result);
-        }
-
-        private static Try<int> Divide(int x, int y)
-        {
-            return Try(() => x / y);
         }
     }
 }
