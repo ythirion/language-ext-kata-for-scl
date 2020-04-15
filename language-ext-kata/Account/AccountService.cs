@@ -39,19 +39,18 @@ namespace language_ext.kata.Account
 
         public async Task<Option<string>> Register(Guid id)
         {
-            string result = null;
-
-            await CreateContext(id)
+            return await CreateContext(id)
                     .Bind(RegisterOnTwitter)
                     .Bind(AuthenticateOnTwitter)
                     .Bind(Tweet)
                     .Bind(UpdateUser)
-                    .Do((context) => result = context.Url)
-                    .Match(context => businessLogger.LogSuccessRegister(context.Id),
-                        failure => businessLogger.LogFailureRegister(id, failure));
-
-            return result;
+                    .Do(context => businessLogger.LogSuccessRegister(context.Id))
+                    .Map(context => context.Url)
+                    .IfFail(failure =>
+                    {
+                        businessLogger.LogFailureRegister(id, failure);
+                        return (string)null;
+                    });
         }
     }
-
 }
