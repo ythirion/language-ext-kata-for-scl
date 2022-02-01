@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace language_ext.kata.Account
 {
     public class BusinessLogger : IBusinessLogger

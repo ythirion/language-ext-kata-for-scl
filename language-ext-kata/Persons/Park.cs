@@ -8,7 +8,9 @@ namespace language_ext.kata.Persons
         public Seq<PetType> AuthorizedPetTypes { get; }
 
         public Park(string name)
-            : this(name, Seq<PetType>.Empty) { }
+            : this(name, Seq<PetType>.Empty)
+        {
+        }
 
         public Park(string name, Seq<PetType> authorizedPetTypes)
         {
@@ -16,6 +18,6 @@ namespace language_ext.kata.Persons
             AuthorizedPetTypes = authorizedPetTypes;
         }
 
-        public Park AddAuthorizedPetType(PetType petType) => new Park(Name, AuthorizedPetTypes.Add(petType));
+        public Park AddAuthorizedPetType(PetType petType) => new(Name, AuthorizedPetTypes.Add(petType));
     }
 }

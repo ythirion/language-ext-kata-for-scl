@@ -2,6 +2,11 @@
 {
     public enum PetType
     {
-        CAT, DOG, HAMSTER, TURTLE, BIRD, SNAKE
+        Cat,
+        Dog,
+        Hamster,
+        Turtle,
+        Bird,
+        Snake
     }
 }

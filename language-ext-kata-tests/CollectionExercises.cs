@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using language_ext.kata.Persons;
 using LanguageExt;
+using LanguageExt.Common;
 using Xunit;
 using static language_ext.kata.Persons.PetType;
 using static LanguageExt.Prelude;
@@ -14,8 +15,8 @@ namespace language_ext.kata.tests
         public void GetFirstNamesOfAllPeople()
         {
             // Replace it, with a transformation method on people.
-            var firstNames = Seq<string>();
-            var expectedFirstNames = Seq("Mary", "Bob", "Ted", "Jake", "Barry", "Terry", "Harry", "John");
+            Seq<string> firstNames = Seq<string>();
+            Seq<string> expectedFirstNames = Seq("Mary", "Bob", "Ted", "Jake", "Barry", "Terry", "Harry", "John");
 
             Assert.Equal(expectedFirstNames, firstNames);
         }
@@ -26,7 +27,7 @@ namespace language_ext.kata.tests
             var person = GetPersonNamed("Mary Smith");
 
             // Replace it, with a transformation method on people.
-            var names = Seq<string>();
+            Seq<string> names = Seq<string>();
 
             Assert.Equal("Tabby", names.Single());
         }
@@ -35,7 +36,7 @@ namespace language_ext.kata.tests
         public void GetPeopleWithCats()
         {
             // Replace it, with a positive filtering method on people.
-            var peopleWithCats = Seq<string>();
+            Seq<string> peopleWithCats = Seq<string>();
 
             Assert.Equal(2, peopleWithCats.Count);
         }
@@ -44,7 +45,7 @@ namespace language_ext.kata.tests
         public void GetPeopleWithoutCats()
         {
             // Replace it, with a negative filtering method on Seq.
-            var peopleWithoutCats = Seq<string>();
+            Seq<string> peopleWithoutCats = Seq<string>();
 
             Assert.Equal(6, peopleWithoutCats.Count);
         }
@@ -53,17 +54,17 @@ namespace language_ext.kata.tests
         public void DoAnyPeopleHaveCats()
         {
             //replace null with a Predicate lambda which checks for PetType.CAT
-            bool doAnyPeopleHaveCats = false;
+            var doAnyPeopleHaveCats = false;
             Assert.True(doAnyPeopleHaveCats);
         }
 
         [Fact]
         public void DoAllPeopleHavePets()
         {
-            Func<Person, bool> predicate = (p) => true;
+            Func<Person, bool> predicate = p => true;
             // OR use local functions -> static bool predicate(Person p) => p.IsPetPerson();
             // replace with a method call send to this.people that checks if all people have pets
-            bool result = people.ForAll(predicate);
+            var result = people.ForAll(predicate);
 
             Assert.False(result);
         }
@@ -88,18 +89,16 @@ namespace language_ext.kata.tests
         public void GetPeopleWithPets()
         {
             // replace with only the pets owners
-            var petPeople = Seq<Person>();
+            Seq<Person> petPeople = Seq<Person>();
             Assert.Equal(7, petPeople.Count);
         }
 
         [Fact]
         public void GetAllPetTypesOfAllPeople()
         {
-            var petTypes = Seq<PetType>();
+            Seq<PetType> petTypes = Seq<PetType>();
 
-            Assert.Equal(
-                    Seq(CAT, DOG, SNAKE, BIRD, TURTLE, HAMSTER),
-                    petTypes);
+            Assert.Equal(Seq(Cat, Dog, Snake, Bird, Turtle, Hamster), petTypes);
         }
 
         [Fact]
@@ -129,7 +128,7 @@ namespace language_ext.kata.tests
         public void SortByAge()
         {
             // Create a Seq<int> with ascending ordered age values.
-            var sortedAgeList = Seq<int>();
+            Seq<int> sortedAgeList = Seq<int>();
 
             Assert.Equal(4, sortedAgeList.Count);
             Assert.Equal(Seq(1, 2, 3, 4), sortedAgeList);
@@ -139,7 +138,7 @@ namespace language_ext.kata.tests
         public void SortByDescAge()
         {
             // Create a Seq<int> with descending ordered age values.
-            var sortedAgeList = Seq<int>();
+            Seq<int> sortedAgeList = Seq<int>();
 
             Assert.Equal(4, sortedAgeList.Count);
             Assert.Equal(Seq(4, 3, 2, 1), sortedAgeList);
@@ -149,7 +148,7 @@ namespace language_ext.kata.tests
         public void Top3OlderPets()
         {
             // Create a Seq<string> with the 3 older pets.
-            var top3OlderPets = Seq<string>();
+            Seq<string> top3OlderPets = Seq<string>();
 
             Assert.Equal(3, top3OlderPets.Count);
             Assert.Equal(Seq("Spike", "Dolly", "Tabby"), top3OlderPets);
@@ -159,7 +158,7 @@ namespace language_ext.kata.tests
         public void GetFirstPersonWithAtLeast2Pets()
         {
             // Find the first person who owns at least 2 pets
-            var firstPersonWithAtLeast2Pets = Option<Person>.None;
+            Option<Person> firstPersonWithAtLeast2Pets = Option<Person>.None;
 
             Assert.True(firstPersonWithAtLeast2Pets.IsSome);
             Assert.Equal("Bob", firstPersonWithAtLeast2Pets.Map(p => p.FirstName));
@@ -169,7 +168,7 @@ namespace language_ext.kata.tests
         public void IsThereAnyPetOlderThan4()
         {
             // Check whether any exercises older than 4 exists or not
-            bool isThereAnyPetOlderThan4 = true;
+            var isThereAnyPetOlderThan4 = true;
 
             Assert.False(isThereAnyPetOlderThan4);
         }
@@ -178,7 +177,7 @@ namespace language_ext.kata.tests
         public void IsEveryPetsOlderThan1()
         {
             // Check whether all pets are older than 1 or not
-            bool allOlderThan1 = false;
+            var allOlderThan1 = false;
 
             Assert.True(allOlderThan1);
         }

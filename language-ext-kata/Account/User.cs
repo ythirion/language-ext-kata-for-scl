@@ -2,11 +2,5 @@
 
 namespace language_ext.kata.Account
 {
-    public class User
-    {
-        public Guid Id { get; set; }
-        public string Email { get; set; }
-        public string Name { get; set; }
-        public string Password { get; set; }
-    }
+    public record User(Guid Id, string Email, string Name, string Password);
 }

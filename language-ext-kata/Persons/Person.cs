@@ -25,15 +25,17 @@ namespace language_ext.kata.Persons
 
         public bool Named(string fullName) => fullName.Equals(FirstName + " " + LastName);
 
-        public ImmutableDictionary<PetType, int> GetPetTypes() => 
+        public ImmutableDictionary<PetType, int> GetPetTypes() =>
             Pets.GroupBy(p => p.Type)
                 .ToDictionary(g => g.Key, g => g.Count())
                 .ToImmutableDictionary();
 
-        public bool HasPetType(PetType type) => GetPetTypes().ContainsKey(type);
+        public bool HasPetType(PetType type) =>
+            GetPetTypes()
+                .ContainsKey(type);
 
-        public Person AddPet(PetType petType, string name, int age) => 
-            new Person(FirstName, LastName, Pets.Add(new Pet(petType, name, age)));
+        public Person AddPet(PetType petType, string name, int age) =>
+            new(FirstName, LastName, Pets.Add(new Pet(petType, name, age)));
 
         public bool IsPetPerson() => GetNumberOfPets >= 1;
 

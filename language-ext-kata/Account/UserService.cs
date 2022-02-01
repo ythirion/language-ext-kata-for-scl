@@ -6,28 +6,23 @@ namespace language_ext.kata.Account
 {
     public class UserService
     {
-        private readonly Seq<User> repository =
-            Seq(
-                new User
-                {
-                    Id = new Guid("376510ae-4e7e-11ea-b77f-2e728ce88125"),
-                    Email = "bud.spencer@gmail.com",
-                    Name = "Bud Spencer",
-                    Password = "OJljaefp0')",
-                },
-                new User
-                {
-                    Id = new Guid("37651306-4e7e-11ea-b77f-2e728ce88125"),
-                    Email = "terrence.hill@gmail.com",
-                    Name = "Terrence Hill",
-                    Password = "àu__udsv09Ll",
-                });
+        private static Seq<User> _repository =
+            Seq(new User(Guid.Parse("376510ae-4e7e-11ea-b77f-2e728ce88125"),
+                    "bud.spencer@gmail.com",
+                    "Bud Spencer",
+                    "OJljaefp0')"),
+                new User(Guid.Parse("37651306-4e7e-11ea-b77f-2e728ce88125"),
+                    "terrence.hill@gmail.com",
+                    "Terrence Hill",
+                    "àu__udsv09Ll"));
 
-        public User FindById(Guid id) => repository.Filter(p => id.Equals(p.Id)).Single();
+        public User FindById(Guid id) =>
+            _repository
+                .Filter(p => id == p.Id)
+                .Single();
 
         public void UpdateTwitterAccountId(Guid id, string twitterAccountId)
         {
-
         }
     }
 }

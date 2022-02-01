@@ -1,55 +1,52 @@
 ﻿using System;
 
-namespace language_ext.kata.Account
+namespace language_ext.kata.Account;
+
+public class AccountService
 {
-    public class AccountService
+    private readonly IBusinessLogger _businessLogger;
+    private readonly TwitterService _twitterService;
+    private readonly UserService _userService;
+
+    public AccountService(UserService userService,
+        TwitterService twitterService,
+        IBusinessLogger businessLogger)
     {
-        private readonly UserService userService;
-        private readonly TwitterService twitterService;
-        private readonly IBusinessLogger businessLogger;
-
-        public AccountService(UserService userService, TwitterService twitterService, IBusinessLogger businessLogger)
-        {
-            this.userService = userService;
-            this.twitterService = twitterService;
-            this.businessLogger = businessLogger;
-        }
-
-        public string Register(Guid id)
-        {
-            try
-            {
-                User user = userService.FindById(id);
-
-                if (user == null)
-                    return null;
-
-                string accountId = twitterService.Register(user.Email, user.Name);
-
-                if (accountId == null)
-                    return null;
-
-                string twitterToken = twitterService.Authenticate(user.Email, user.Password);
-
-                if (twitterToken == null)
-                    return null;
-
-                string tweetUrl = twitterService.Tweet(twitterToken, "Hello I am " + user.Name);
-
-                if (tweetUrl == null)
-                    return null;
-
-                userService.UpdateTwitterAccountId(id, accountId);
-                businessLogger.LogSuccessRegister(id);
-
-                return tweetUrl;
-            }
-            catch (Exception ex)
-            {
-                businessLogger.LogFailureRegister(id, ex);
-                return null;
-            }
-        }
+        _userService = userService;
+        _twitterService = twitterService;
+        _businessLogger = businessLogger;
     }
 
+    public string Register(Guid id)
+    {
+        try
+        {
+            var user = _userService.FindById(id);
+
+            if (user == null) return null;
+
+            var accountId = _twitterService.Register(user.Email, user.Name);
+
+            if (accountId == null) return null;
+
+            var twitterToken = _twitterService.Authenticate(user.Email, user.Password);
+
+            if (twitterToken == null) return null;
+
+            var tweetUrl = _twitterService.Tweet(twitterToken, "Hello I am " + user.Name);
+
+            if (tweetUrl == null) return null;
+
+            _userService.UpdateTwitterAccountId(id, accountId);
+            _businessLogger.LogSuccessRegister(id);
+
+            return tweetUrl;
+        }
+        catch (Exception ex)
+        {
+            _businessLogger.LogFailureRegister(id, ex);
+
+            return null;
+        }
+    }
 }
